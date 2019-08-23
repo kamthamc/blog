@@ -1,0 +1,3 @@
+User-agent: *
+
+sitemap: https://blog.kchaitanya.com/sitemap.xml
