@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "author": "Chaitanya Kumar <projects+github@kchaitanya.com> (https://www.kchaitanya.com)",
   "dependencies": {
-    "@mdx-js/mdx": "^1.4.3",
+    "@mdx-js/mdx": "^1.4.5",
     "@mdx-js/react": "^1.4.3",
     "babel-plugin-styled-components": "^1.10.6",
     "gatsby": "^2.15.6",
