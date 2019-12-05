@@ -1,147 +1,141 @@
-const config = require('./config')
+const config = require('./config');
 
-const pathPrefix = config.pathPrefix === '/' ? '' : config.pathPrefix
+const pathPrefix = config.pathPrefix === '/' ? '' : config.pathPrefix;
 
 module.exports = {
-  pathPrefix: config.pathPrefix,
-  siteMetadata: {
-    siteUrl: config.siteUrl + pathPrefix,
+ pathPrefix: config.pathPrefix,
+ siteMetadata: {
+  siteUrl: config.siteUrl + pathPrefix,
+ },
+ plugins: [
+  'gatsby-plugin-react-helmet',
+  'gatsby-plugin-styled-components',
+  'gatsby-plugin-sharp',
+  {
+   resolve: 'gatsby-source-filesystem',
+   options: {
+    name: 'post',
+    path: `${__dirname}/blog`,
+   },
   },
-  plugins: [
-    'gatsby-plugin-react-helmet',
-    'gatsby-plugin-styled-components',
-    'gatsby-plugin-sharp',
-    {
-      resolve: 'gatsby-source-filesystem',
+  {
+   resolve: 'gatsby-plugin-mdx',
+   options: {
+    gatsbyRemarkPlugins: [
+     {
+      resolve: 'gatsby-remark-external-links',
       options: {
-        name: 'post',
-        path: `${__dirname}/blog`,
+       target: '_blank',
+       rel: 'nofollow noopener noreferrer',
       },
-    },
-    {
-      resolve: 'gatsby-plugin-google-analytics',
+     },
+     {
+      resolve: 'gatsby-remark-images',
       options: {
-        trackingId: config.googleAnalyticsID,
+       maxWidth: 830,
+       quality: 90,
+       withWebp: true,
+       linkImagesToOriginal: false,
       },
-    },
-    {
-      resolve: 'gatsby-plugin-mdx',
+     },
+     // TODO: Replace with "mdx-component-autolink-headers"
+     {
+      resolve: 'gatsby-remark-autolink-headers',
       options: {
-        gatsbyRemarkPlugins: [
-          {
-            resolve: 'gatsby-remark-external-links',
-            options: {
-              target: '_blank',
-              rel: 'nofollow noopener noreferrer',
-            },
+       maintainCase: false,
+      },
+     },
+    ],
+    // TODO: Remove this workaround
+    // https://github.com/gatsbyjs/gatsby/issues/15486
+    plugins: [`gatsby-remark-images`, `gatsby-remark-autolink-headers`],
+   },
+  },
+  {
+   resolve: `gatsby-transformer-remark`,
+   options: {
+    plugins: [
+     {
+      resolve: `gatsby-remark-prismjs`,
+      options: {
+       // Class prefix for <pre> tags containing syntax highlighting;
+       // defaults to 'language-' (eg <pre class="language-js">).
+       // If your site loads Prism into the browser at runtime,
+       // (eg for use with libraries like react-live),
+       // you may use this to prevent Prism from re-processing syntax.
+       // This is an uncommon use-case though;
+       // If you're unsure, it's best to use the default value.
+       classPrefix: 'language-',
+       // This is used to allow setting a language for inline code
+       // (i.e. single backticks) by creating a separator.
+       // This separator is a string and will do no white-space
+       // stripping.
+       // A suggested value for English speakers is the non-ascii
+       // character '›'.
+       inlineCodeMarker: null,
+       // This lets you set up language aliases.  For example,
+       // setting this to '{ sh: "bash" }' will let you use
+       // the language "sh" which will highlight using the
+       // bash highlighter.
+       aliases: {},
+       // This toggles the display of line numbers globally alongside the code.
+       // To use it, add the following line in src/layouts/index.js
+       // right after importing the prism color scheme:
+       //  `require("prismjs/plugins/line-numbers/prism-line-numbers.css");`
+       // Defaults to false.
+       // If you wish to only show line numbers on certain code blocks,
+       // leave false and use the {numberLines: true} syntax below
+       showLineNumbers: false,
+       // If setting this to true, the parser won't handle and highlight inline
+       // code used in markdown i.e. single backtick code like `this`.
+       noInlineHighlight: false,
+       // This adds a new language definition to Prism or extend an already
+       // existing language definition. More details on this option can be
+       // found under the header "Add new language definition or extend an
+       // existing language" below.
+       languageExtensions: [
+        {
+         language: 'superscript',
+         extend: 'javascript',
+         definition: {
+          superscript_types: /(SuperType)/,
+         },
+         insertBefore: {
+          function: {
+           superscript_keywords: /(superif|superelse)/,
           },
-          {
-            resolve: 'gatsby-remark-images',
-            options: {
-              maxWidth: 830,
-              quality: 90,
-              withWebp: true,
-              linkImagesToOriginal: false,
-            },
-          },
-          // TODO: Replace with "mdx-component-autolink-headers"
-          {
-            resolve: 'gatsby-remark-autolink-headers',
-            options: {
-              maintainCase: false,
-            },
-          },
-        ],
-        // TODO: Remove this workaround
-        // https://github.com/gatsbyjs/gatsby/issues/15486
-        plugins: [`gatsby-remark-images`, `gatsby-remark-autolink-headers`],
+         },
+        },
+       ],
+       // Customize the prompt used in shell output
+       // Values below are default
+       prompt: {
+        user: 'root',
+        host: 'localhost',
+        global: false,
+       },
       },
-    },
-    {
-      resolve: `gatsby-transformer-remark`,
-      options: {
-        plugins: [
-          {
-            resolve: `gatsby-remark-prismjs`,
-            options: {
-              // Class prefix for <pre> tags containing syntax highlighting;
-              // defaults to 'language-' (eg <pre class="language-js">).
-              // If your site loads Prism into the browser at runtime,
-              // (eg for use with libraries like react-live),
-              // you may use this to prevent Prism from re-processing syntax.
-              // This is an uncommon use-case though;
-              // If you're unsure, it's best to use the default value.
-              classPrefix: "language-",
-              // This is used to allow setting a language for inline code
-              // (i.e. single backticks) by creating a separator.
-              // This separator is a string and will do no white-space
-              // stripping.
-              // A suggested value for English speakers is the non-ascii
-              // character '›'.
-              inlineCodeMarker: null,
-              // This lets you set up language aliases.  For example,
-              // setting this to '{ sh: "bash" }' will let you use
-              // the language "sh" which will highlight using the
-              // bash highlighter.
-              aliases: {},
-              // This toggles the display of line numbers globally alongside the code.
-              // To use it, add the following line in src/layouts/index.js
-              // right after importing the prism color scheme:
-              //  `require("prismjs/plugins/line-numbers/prism-line-numbers.css");`
-              // Defaults to false.
-              // If you wish to only show line numbers on certain code blocks,
-              // leave false and use the {numberLines: true} syntax below
-              showLineNumbers: false,
-              // If setting this to true, the parser won't handle and highlight inline
-              // code used in markdown i.e. single backtick code like `this`.
-              noInlineHighlight: false,
-              // This adds a new language definition to Prism or extend an already
-              // existing language definition. More details on this option can be
-              // found under the header "Add new language definition or extend an
-              // existing language" below.
-              languageExtensions: [
-                {
-                  language: "superscript",
-                  extend: "javascript",
-                  definition: {
-                    superscript_types: /(SuperType)/,
-                  },
-                  insertBefore: {
-                    function: {
-                      superscript_keywords: /(superif|superelse)/,
-                    },
-                  },
-                },
-              ],
-              // Customize the prompt used in shell output
-              // Values below are default
-              prompt: {
-                user: "root",
-                host: "localhost",
-                global: false,
-              },
-            },
-          },
-        ],
-      },
-    },
-    'gatsby-plugin-catch-links',
-    'gatsby-plugin-sitemap',
-    'gatsby-plugin-lodash',
-    {
-      resolve: 'gatsby-plugin-manifest',
-      options: {
-        name: config.siteTitleAlt,
-        short_name: config.siteTitleManifest,
-        description: config.siteDescription,
-        start_url: config.pathPrefix,
-        background_color: config.backgroundColor,
-        theme_color: config.themeColor,
-        display: 'standalone',
-        icon: config.favicon,
-      },
-    },
-    'gatsby-plugin-offline',
-    'gatsby-plugin-netlify',
-  ],
-}
+     },
+    ],
+   },
+  },
+  'gatsby-plugin-catch-links',
+  'gatsby-plugin-sitemap',
+  'gatsby-plugin-lodash',
+  {
+   resolve: 'gatsby-plugin-manifest',
+   options: {
+    name: config.siteTitleAlt,
+    short_name: config.siteTitleManifest,
+    description: config.siteDescription,
+    start_url: config.pathPrefix,
+    background_color: config.backgroundColor,
+    theme_color: config.themeColor,
+    display: 'standalone',
+    icon: config.favicon,
+   },
+  },
+  'gatsby-plugin-offline',
+  'gatsby-plugin-netlify',
+ ],
+};
